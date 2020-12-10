@@ -11,19 +11,23 @@ describe Breathing::Excel do
       user.destroy!
       expect(Breathing::ChangeLog.count).to eq(3)
 
-      dept = Department.create!(name: 'a')
-      dept.update!(name: 'b')
+      Tempfile.open(['tmp', '.xlsx']) do |file|
+        Breathing::Excel.new.create(file_name: file.path)
+        workbook = RubyXL::Parser.parse(file.path)
+        expect(workbook.sheets[0].name).to eq('users')
+        user_sheet = workbook.worksheets[0]
+        expect(user_sheet.sheet_data.size).to eq(Breathing::ChangeLog.where(table_name: :users).count + 1)
+      end
+    end
 
-      Tempfile.open(["tmp", ".xlsx"]) do |file|
+    it 'multi sheets' do
+      User.create!(name: 'a', age: 20)
+      Department.create!(name: 'a')
+
+      Tempfile.open(['tmp', '.xlsx']) do |file|
         Breathing::Excel.new.create(file_name: file.path)
         workbook = RubyXL::Parser.parse(file.path)
         expect(workbook.sheets.size).to eq(2)
-        expect(workbook.sheets[0].name).to eq("departments")
-        expect(workbook.sheets[1].name).to eq("users")
-        department_sheet = workbook.worksheets[0]
-        expect(department_sheet.sheet_data.size).to eq(Breathing::ChangeLog.where(table_name: :departments).count + 1)
-        user_sheet = workbook.worksheets[1]
-        expect(user_sheet.sheet_data.size).to eq(Breathing::ChangeLog.where(table_name: :users).count + 1)
       end
     end
   end
