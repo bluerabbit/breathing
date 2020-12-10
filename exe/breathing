@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+require 'breathing/cli'
+
+Breathing::Cli.start
