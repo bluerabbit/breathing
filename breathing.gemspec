@@ -7,8 +7,8 @@ Gem::Specification.new do |s|
   s.authors     = ['Akira Kusumoto']
   s.email       = ['akirakusumo10@gmail.com']
   s.homepage    = 'https://github.com/bluerabbit/breathing'
-  s.summary     = 'audit logging for database'
-  s.description = 'audit logging for database'
+  s.summary     = 'Audit logging for database'
+  s.description = 'Audit logging for database'
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")

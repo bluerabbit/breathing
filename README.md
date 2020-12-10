@@ -40,7 +40,11 @@ Cleanup command.
 % DATABASE_URL="mysql2://user:pass@host:port/database" breathing uninstall
 ```
 
-- Drop table `change_logs` and triggers
+- Drop table `change_logs`
+- Drop triggers
+    - breathing_insert_{table_name}
+    - breathing_update_{table_name}
+    - breathing_delete_{table_name}
 
 ## Copyright
 
