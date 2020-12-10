@@ -11,7 +11,15 @@ ActiveRecord::Schema.define version: 0 do
     t.integer :age, null: false
     t.timestamps null: false
   end
+
+  create_table :departments, force: true do |t|
+    t.string :name, null: false
+    t.timestamps null: false
+  end
 end
 
 class User < ActiveRecord::Base
+end
+
+class Department < ActiveRecord::Base
 end

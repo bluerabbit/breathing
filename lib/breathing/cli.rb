@@ -20,6 +20,11 @@ module Breathing
       Breathing.clear
     end
 
+    desc 'export', 'output xlsx'
+    def export
+      Breathing.export
+    end
+
     desc 'version', 'Show Version'
     def version
       say "Version: #{Breathing::VERSION}"
