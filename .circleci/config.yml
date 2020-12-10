@@ -1,0 +1,53 @@
+version: 2.1
+
+executors:
+  default:
+    working_directory: ~/app
+    docker:
+      - image: circleci/ruby:2.6
+        environment:
+          DB_USER: 'root'
+          DB_PASS: 'root'
+          DB_HOST: '127.0.0.1'
+      - image: circleci/mysql:8-ram
+        environment:
+          MYSQL_USER: root
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: test
+        command: [--default-authentication-plugin=mysql_native_password]
+
+commands:
+  setup_bundle:
+    steps:
+      - restore_cache:
+          key: bundle-{{ checksum "breathing.gemspec" }}
+      - run:
+          name: install dependencies
+          command: |
+            bundle install --jobs=4 --retry=3 --path vendor/bundle
+      - save_cache:
+          key: bundle-{{ checksum "breathing.gemspec" }}
+          paths:
+          - vendor/bundle
+
+  wait_for_db:
+    steps:
+      - run:
+          name: Wait for DB
+          command: dockerize -wait tcp://127.0.0.1:3306 -timeout 1m
+
+jobs:
+  test:
+    executor: default
+    steps:
+      - checkout
+      - setup_bundle
+      - wait_for_db
+      - run: bundle exec rspec ./spec
+
+workflows:
+  version: 2
+
+  test:
+    jobs:
+      - test
