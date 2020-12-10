@@ -28,9 +28,9 @@ Just run the following command.
 
 - Create table `change_logs`
 - Create triggers
-    - breathing_insert_{table_name}
-    - breathing_update_{table_name}
-    - breathing_delete_{table_name}
+    - change_logs_insert_{table_name}
+    - change_logs_update_{table_name}
+    - change_logs_delete_{table_name}
 
 ### Uninstall
 
@@ -42,9 +42,15 @@ Cleanup command.
 
 - Drop table `change_logs`
 - Drop triggers
-    - breathing_insert_{table_name}
-    - breathing_update_{table_name}
-    - breathing_delete_{table_name}
+    - change_logs_insert_{table_name}
+    - change_logs_update_{table_name}
+    - change_logs_delete_{table_name}
+
+### export
+
+```
+% DATABASE_URL="mysql2://user:pass@host:port/database" breathing export
+```
 
 ## Copyright
 

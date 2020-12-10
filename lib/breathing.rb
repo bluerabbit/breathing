@@ -2,6 +2,7 @@ require 'active_record'
 require 'breathing/installer'
 require 'breathing/trigger'
 require 'breathing/change_log'
+require 'breathing/excel'
 
 module Breathing
   VERSION = Gem.loaded_specs['breathing'].version.to_s
@@ -20,6 +21,11 @@ module Breathing
     def clear
       establish_connection
       Breathing::ChangeLog.delete_all
+    end
+
+    def export
+      establish_connection
+      Breathing::Excel.new.create
     end
 
     def establish_connection
