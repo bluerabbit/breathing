@@ -2,7 +2,7 @@ require 'active_record'
 require 'breathing'
 
 ActiveRecord::Base.establish_connection(
-  YAML.load(ERB.new(File.read('spec/database.yml')).result)['test']
+  YAML.load(ERB.new(File.read('spec/database.yml')).result)["test_#{ENV['DB'] || 'mysql'}"]
 )
 
 ActiveRecord::Schema.define version: 0 do

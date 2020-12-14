@@ -6,8 +6,7 @@ executors:
     docker:
       - image: circleci/ruby:2.6
         environment:
-          DB_USER: 'root'
-          DB_PASS: 'root'
+          DB_USER: root
           DB_HOST: '127.0.0.1'
       - image: circleci/mysql:8-ram
         environment:
@@ -15,6 +14,10 @@ executors:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: breathing_test
         command: [--default-authentication-plugin=mysql_native_password]
+      - image: circleci/postgres:10.6-alpine-ram
+        environment:
+          POSTGRES_USER: root
+          POSTGRES_DB: breathing_test
 
 commands:
   setup_bundle:
@@ -35,6 +38,9 @@ commands:
       - run:
           name: Wait for DB
           command: dockerize -wait tcp://127.0.0.1:3306 -timeout 1m
+      - run:
+          name: Wait for DB
+          command: dockerize -wait tcp://127.0.0.1:5432 -timeout 1m
 
 jobs:
   test:
@@ -43,7 +49,8 @@ jobs:
       - checkout
       - setup_bundle
       - wait_for_db
-      - run: bundle exec rspec ./spec
+      - run: DB=mysql DB_PASS=root bundle exec rspec ./spec
+      - run: DB=pg bundle exec rspec ./spec
 
 workflows:
   version: 2

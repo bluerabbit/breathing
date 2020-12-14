@@ -7,7 +7,10 @@ describe Breathing do
 
   describe 'change_logs' do
     before { Breathing::Installer.new.install }
-    after { Breathing::Installer.new.uninstall }
+
+    after do
+      Breathing::Installer.new.uninstall if ActiveRecord::Base.connection.adapter_name == "Mysql2"
+    end
 
     it do
       expect(Breathing::ChangeLog.count).to eq(0)

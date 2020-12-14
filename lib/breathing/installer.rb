@@ -30,7 +30,7 @@ module Breathing
 
     def database_version_valid?
       connection = ActiveRecord::Base.connection
-      connection.adapter_name == 'Mysql2' && connection.raw_connection.info[:version].to_f >= 5.7
+      connection.adapter_name == "PostgreSQL" || (connection.adapter_name == 'Mysql2' && connection.raw_connection.info[:version].to_f >= 5.7)
     end
 
     def log_table_name

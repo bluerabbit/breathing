@@ -3,7 +3,9 @@ require 'spec_helper'
 describe Breathing::Excel do
   describe '#create' do
     before { Breathing::Installer.new.install }
-    after { Breathing::Installer.new.uninstall }
+    after do
+      Breathing::Installer.new.uninstall if ActiveRecord::Base.connection.adapter_name == "Mysql2"
+    end
 
     it do
       user = User.create!(name: 'a', age: 20)
