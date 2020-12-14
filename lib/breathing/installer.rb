@@ -4,8 +4,12 @@ require 'breathing/trigger'
 require 'breathing/change_log'
 
 module Breathing
+  class UnsupportedError < StandardError; end
+
   class Installer
     def install
+      raise Breathing::UnsupportedError, "Version MySQL 5.6 is not supported." unless database_version_valid?
+
       create_log_table unless log_table_exists?
 
       models.each do |model|
@@ -23,6 +27,11 @@ module Breathing
     end
 
     private
+
+    def database_version_valid?
+      connection = ActiveRecord::Base.connection
+      connection.adapter_name == 'Mysql2' && connection.raw_connection.info[:version].to_f >= 5.7
+    end
 
     def log_table_name
       Breathing::ChangeLog.table_name

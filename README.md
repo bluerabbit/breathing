@@ -52,6 +52,11 @@ Cleanup command.
 % DATABASE_URL="mysql2://user:pass@host:port/database" breathing export
 ```
 
+## Compatibility
+
+# * Ruby 2.3.0+
+# * MySQL 5.7.0+
+
 ## Copyright
 
 Copyright (c) 2020 Akira Kusumoto. See MIT-LICENSE file for further details.
