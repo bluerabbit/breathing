@@ -6,7 +6,7 @@ Logging mechanism using database triggers to store the old and new row states in
 ## Install
 
 ```
-gem install 'breathing'
+gem install breathing
 ```
 
 ## Usage
