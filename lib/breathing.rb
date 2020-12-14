@@ -1,4 +1,5 @@
 require 'active_record'
+require 'hairtrigger'
 require 'breathing/installer'
 require 'breathing/trigger'
 require 'breathing/change_log'
