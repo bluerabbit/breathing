@@ -60,10 +60,13 @@ module Breathing
     def drop
       %w[insert update delete].each do |action|
         trigger_name = "#{log_table_name}_#{action}_#{model.table_name}"
-        next unless exists?(trigger_name)
 
         begin
-          sql = "DROP TRIGGER #{trigger_name}"
+          sql = "DROP TRIGGER IF EXISTS #{trigger_name}"
+          if ActiveRecord::Base.connection.adapter_name == "PostgreSQL"
+            sql << " ON #{model.table_name} CASCADE;"
+            sql << " DROP FUNCTION IF EXISTS #{trigger_name} CASCADE;"
+          end
           puts sql
           ActiveRecord::Base.connection.execute(sql)
         rescue StandardError => e
