@@ -3,7 +3,7 @@ require 'breathing'
 
 module Breathing
   class Cli < Thor
-    default_command :install
+    default_command :export
 
     desc 'install', 'Create table change_logs and create triggers'
     def install
