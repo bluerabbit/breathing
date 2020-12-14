@@ -4,6 +4,8 @@ require 'active_record'
 require 'breathing'
 require_relative 'app'
 
+ActiveRecord::Base.logger = Logger.new(STDOUT)
+
 RSpec.configure do |config|
   config.around do |example|
     ActiveRecord::Base.transaction do

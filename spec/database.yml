@@ -12,7 +12,7 @@ test_mysql:
 test_pg:
   adapter:   postgresql
   encoding:  unicode
-  username:  <%= ENV.fetch("DB_USER") { '' } %>
+  username:  <%= ENV.fetch("DB_USER") { 'root' } %>
   password:  <%= ENV.fetch("DB_PASS") { '' } %>
   host:      <%= ENV.fetch("DB_HOST") { '127.0.0.1' } %>
   database:  breathing_test
