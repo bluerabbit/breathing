@@ -56,6 +56,7 @@ Cleanup command.
 
 # * Ruby 2.3.0+
 # * MySQL 5.7.0+
+# * PostgreSQL 8.0+
 
 ## Copyright
 

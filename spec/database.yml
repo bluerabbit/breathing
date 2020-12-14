@@ -1,11 +1,18 @@
-test:
+test_mysql:
   adapter:   mysql2
   encoding:  utf8mb4
   charset:   utf8mb4
   collation: utf8mb4_general_ci
-  pool:      5
   username:  <%= ENV.fetch("DB_USER") { 'root' } %>
   password:  <%= ENV.fetch("DB_PASS") { '' } %>
   host:      <%= ENV.fetch("DB_HOST") { '127.0.0.1' } %>
   socket:    /tmp/mysql.sock
-  database: breathing_test
+  database:  breathing_test
+
+test_pg:
+  adapter:   postgresql
+  encoding:  unicode
+  username:  <%= ENV.fetch("DB_USER") { '' } %>
+  password:  <%= ENV.fetch("DB_PASS") { '' } %>
+  host:      <%= ENV.fetch("DB_HOST") { '127.0.0.1' } %>
+  database:  breathing_test
