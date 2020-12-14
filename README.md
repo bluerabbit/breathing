@@ -5,15 +5,8 @@ Logging mechanism using database triggers to store the old and new row states in
 
 ## Install
 
-Put this line in your Gemfile:
-
 ```
-gem 'breathing'
-```
-
-Then bundle:
-```
-% bundle
+gem install 'breathing'
 ```
 
 ## Usage
@@ -24,6 +17,8 @@ Just run the following command.
 
 ```
 % DATABASE_URL="mysql2://user:pass@host:port/database" breathing install
+or
+% DATABASE_URL="postgres://user:pass@host:port/database" breathing install
 ```
 
 - Create table `change_logs`
@@ -46,11 +41,13 @@ Cleanup command.
     - change_logs_update_{table_name}
     - change_logs_delete_{table_name}
 
-### export
+### Export
 
 ```
 % DATABASE_URL="mysql2://user:pass@host:port/database" breathing export
 ```
+
+- Output file `breathing.xlsx`
 
 ## Compatibility
 
