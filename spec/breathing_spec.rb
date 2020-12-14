@@ -9,7 +9,7 @@ describe Breathing do
     before { Breathing::Installer.new.install }
 
     after do
-      Breathing::Installer.new.uninstall if ActiveRecord::Base.connection == "Mysql2"
+      Breathing::Installer.new.uninstall if ActiveRecord::Base.connection.adapter_name == "Mysql2"
     end
 
     it do
