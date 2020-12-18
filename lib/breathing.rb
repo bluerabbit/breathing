@@ -4,6 +4,7 @@ require 'breathing/installer'
 require 'breathing/trigger'
 require 'breathing/change_log'
 require 'breathing/excel'
+require 'breathing/terminal_table'
 
 module Breathing
   VERSION = Gem.loaded_specs['breathing'].version.to_s

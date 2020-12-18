@@ -24,6 +24,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'hairtrigger'
   s.add_dependency 'mysql2'
   s.add_dependency 'pg'
+  s.add_dependency 'terminal-table'
   s.add_dependency 'rubyXL', ['>= 3.4.0']
   s.add_development_dependency 'pry-byebug'
   s.add_development_dependency 'rspec', '~> 3.9'
