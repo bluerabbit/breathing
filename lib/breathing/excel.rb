@@ -26,9 +26,8 @@ module Breathing
         end
         add_body_rows(sheet, rows, column_widths)
 
-        column_widths.each.with_index(0) do |size, i|
-          sheet.change_column_width(i, size + 2)
-        end
+        column_widths.each.with_index { |size, i| sheet.change_column_width(i, size + 2) }
+
         add_style(sheet)
       end
 
@@ -38,56 +37,27 @@ module Breathing
     private
 
     def add_header_row(sheet, row, column_widths)
-      sheet.add_cell(0, 0, 'change_logs.id').tap do |cell|
+      header_color = 'ddedf3' # blue
+      row.data_attributes.keys.each.with_index do |header_column, column_index|
+        cell = sheet.add_cell(0, column_index, header_column)
         cell.change_font_bold(true)
-        cell.change_fill('ddedf3') # color: blue
-      end
-      sheet.add_cell(0, 1, 'change_logs.created_at').tap do |cell|
-        cell.change_font_bold(true)
-        cell.change_fill('ddedf3') # color: blue
-      end
-      sheet.add_cell(0, 2, 'action').tap do |cell|
-        cell.change_font_bold(true)
-        cell.change_fill('ddedf3') # color: blue
-      end
-      sheet.add_cell(0, 3, 'id').tap do |cell|
-        cell.change_font_bold(true)
-        cell.change_fill('ddedf3') # color: blue
-      end
+        cell.change_fill(header_color)
 
-      column_widths << 'change_logs.id'.size
-      column_widths << 'change_logs.created_at'.size
-      column_widths << 'action'.size
-      column_widths << 'id'.size
-
-      row.data_column_names.each.with_index(3) do |column_name, i|
-        cell = sheet.add_cell(0, i, column_name)
-        cell.change_font_bold(true)
-        cell.change_fill('ddedf3') # color: blue
-        column_widths << column_name.size
+        column_widths << header_column.size
       end
     end
 
     def add_body_rows(sheet, rows, column_widths)
-      rows.each.with_index(1) do |row, i|
-        column_widths[0] = row.id.to_s.size if column_widths[0] < row.id.to_s.size
-        column_widths[2] = row.transaction_id.to_s.size if column_widths[2] < row.transaction_id.to_s.size
-        sheet.add_cell(i, 0, row.id)
-        sheet.add_cell(i, 1, row.created_at.to_s(:db))
-        sheet.add_cell(i, 2, row.action)
-        sheet.add_cell(i, 3, row.transaction_id)
-
-        data = row.action == 'DELETE' ? row.before_data : row.after_data
-
-        row.data_column_names.each.with_index(3) do |column_name, j|
-          value            = data[column_name].to_s
-          column_widths[j] = value.size if column_widths[j] < value.size
-          cell_object      = sheet.add_cell(i, j, value)
+      rows.each.with_index(1) do |row, row_number|
+        row.data_attributes.each.with_index do |(column_name, value), column_index|
+          cell = sheet.add_cell(row_number, column_index, value)
           if row.action == 'UPDATE' && column_name != 'updated_at' && row.changed_attribute_columns.include?(column_name)
-            cell_object.change_fill('ffff00') # color: yellow
+            cell.change_fill('ffff00') # color: yellow
           elsif row.action == 'DELETE'
-            cell_object.change_fill('d9d9d9') # color: grey
+            cell.change_fill('d9d9d9') # color: grey
           end
+
+          column_widths[column_index] = value.to_s.size if column_widths[column_index] < value.to_s.size
         end
       end
     end
