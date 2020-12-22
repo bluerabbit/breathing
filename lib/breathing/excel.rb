@@ -40,7 +40,6 @@ module Breathing
       header_color = 'ddedf3' # blue
       row.data_attributes.keys.each.with_index do |header_column, column_index|
         cell = sheet.add_cell(0, column_index, header_column)
-        cell.change_font_bold(true)
         cell.change_fill(header_color)
 
         column_widths << header_column.size
