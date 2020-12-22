@@ -18,16 +18,12 @@ module Breathing
           sheet = @workbook.add_worksheet(table_name)
         end
 
-        rows          = Breathing::ChangeLog.where(table_name: table_name).where('id >= ?', id).order(:id)
-        column_widths = []
+        rows = Breathing::ChangeLog.where(table_name: table_name).where('id >= ?', id).order(:id).to_a
 
-        if first_row = rows.first
-          add_header_row(sheet, first_row, column_widths)
-        end
-        add_body_rows(sheet, rows, column_widths)
+        next if rows.size.zero?
 
-        column_widths.each.with_index { |size, i| sheet.change_column_width(i, size + 2) }
-
+        add_header_row(sheet, rows.first)
+        add_body_rows(sheet, rows)
         add_style(sheet)
       end
 
@@ -36,17 +32,15 @@ module Breathing
 
     private
 
-    def add_header_row(sheet, row, column_widths)
+    def add_header_row(sheet, row)
       header_color = 'ddedf3' # blue
       row.data_attributes.keys.each.with_index do |header_column, column_index|
         cell = sheet.add_cell(0, column_index, header_column)
         cell.change_fill(header_color)
-
-        column_widths << header_column.size
       end
     end
 
-    def add_body_rows(sheet, rows, column_widths)
+    def add_body_rows(sheet, rows)
       rows.each.with_index(1) do |row, row_number|
         row.data_attributes.each.with_index do |(column_name, value), column_index|
           cell = sheet.add_cell(row_number, column_index, value)
@@ -55,22 +49,23 @@ module Breathing
           elsif row.action == 'DELETE'
             cell.change_fill('d9d9d9') # color: grey
           end
-
-          column_widths[column_index] = value.to_s.size if column_widths[column_index] < value.to_s.size
         end
       end
     end
 
     def add_style(sheet)
-      sheet.sheet_data.rows.each.with_index do |row, i|
-        row.cells.each do |cell|
+      sheet.sheet_data.rows.each.with_index do |row, row_index|
+        row.cells.each.with_index do |cell, column_index|
           %i[top bottom left right].each do |direction|
             cell.change_border(direction, 'thin')
           end
+          cell.change_border(:bottom, 'double') if row_index.zero?
 
-          cell.change_border(:bottom, 'double') if i.zero?
+          cell_width = cell.value.to_s.size + 2
+          sheet.change_column_width(column_index, cell_width) if cell_width > sheet.get_column_width(column_index)
         end
       end
+
       sheet.change_row_horizontal_alignment(0, 'center')
     end
   end
