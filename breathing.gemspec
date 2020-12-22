@@ -20,7 +20,7 @@ Gem::Specification.new do |s|
   s.executables = s.files.grep(%r{^exe/}) { |f| File.basename(f) }
   s.add_runtime_dependency 'thor'
 
-  s.add_dependency 'activerecord', ['>= 5.0.0']
+  s.add_dependency 'activerecord', ['>= 6.0.0']
   s.add_dependency 'hairtrigger'
   s.add_dependency 'mysql2'
   s.add_dependency 'pg'

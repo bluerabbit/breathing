@@ -8,9 +8,9 @@ module Breathing
 
   class Installer
     def install
-      raise Breathing::UnsupportedError, "Version MySQL 5.6 is not supported." unless database_version_valid?
+      raise Breathing::UnsupportedError, "Version MySQL 5.6 is not supported." unless database_supported_version?
 
-      create_log_table unless log_table_exists?
+      create_log_table
 
       models.each do |model|
         column_names = model.columns.map(&:name)
@@ -21,14 +21,13 @@ module Breathing
     end
 
     def uninstall
-      drop_log_table if log_table_exists?
-
+      drop_log_table
       models.each { |model| Breathing::Trigger.new(model, log_table_name).drop }
     end
 
     private
 
-    def database_version_valid?
+    def database_supported_version?
       connection = ActiveRecord::Base.connection
       connection.adapter_name == "PostgreSQL" || (connection.adapter_name == 'Mysql2' && connection.raw_connection.info[:version].to_f >= 5.7)
     end
@@ -39,26 +38,22 @@ module Breathing
 
     def create_log_table(table_name: log_table_name)
       ActiveRecord::Schema.define version: 0 do
-        create_table table_name, force: false do |t|
-          t.string :action, null: false
-          t.string :table_name, null: false
-          t.string :transaction_id, null: false
-          t.json :before_data, null: false
-          t.json :after_data, null: false
-          t.datetime :created_at, null: false, index: true
+        create_table table_name, if_not_exists: true do |t|
+          t.datetime :created_at,     null: false, index: true
+          t.string   :action,         null: false
+          t.string   :table_name,     null: false
+          t.string   :transaction_id, null: false
+          t.json     :before_data,    null: false
+          t.json     :after_data,     null: false
+
           t.index %w[table_name transaction_id]
         end
       end
     end
 
     def drop_log_table
-      sql = "DROP TABLE #{log_table_name}"
-      puts sql
-      ActiveRecord::Base.connection.execute(sql)
-    end
-
-    def log_table_exists?
-      ActiveRecord::Base.connection.table_exists?(log_table_name)
+      puts "DROP TABLE #{log_table_name}"
+      ActiveRecord::Base.connection.drop_table(log_table_name, if_exists: true)
     end
 
     def models
