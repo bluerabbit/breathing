@@ -29,7 +29,7 @@ describe Breathing::Excel do
       Tempfile.open(['tmp', '.xlsx']) do |file|
         Breathing::Excel.new.create(file_name: file.path)
         workbook = RubyXL::Parser.parse(file.path)
-        expect(workbook.sheets.size).to eq(2)
+        expect(workbook.sheets.map(&:name)).to eq(%w[departments users])
       end
     end
   end

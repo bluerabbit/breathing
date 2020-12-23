@@ -11,7 +11,7 @@ module Breathing
     def create(id: 1, file_name: 'breathing.xlsx')
       sheet       = @workbook[0]
       table_names = Breathing::ChangeLog.where('id >= ?', id).group(:table_name).pluck(:table_name)
-      table_names.each do |table_name|
+      table_names.sort.each do |table_name|
         if sheet.sheet_name == 'Sheet1'
           sheet.sheet_name = table_name
         else
