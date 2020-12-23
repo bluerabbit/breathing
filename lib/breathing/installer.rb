@@ -40,8 +40,8 @@ module Breathing
       ActiveRecord::Schema.define version: 0 do
         create_table table_name, if_not_exists: true do |t|
           t.datetime :created_at,     null: false, index: true
-          t.string   :action,         null: false
           t.string   :table_name,     null: false
+          t.string   :action,         null: false
           t.string   :transaction_id, null: false
           t.json     :before_data,    null: false
           t.json     :after_data,     null: false

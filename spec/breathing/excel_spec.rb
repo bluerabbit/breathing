@@ -23,13 +23,18 @@ describe Breathing::Excel do
     end
 
     it 'multi sheets' do
-      User.create!(name: 'a', age: 20)
+      user = User.create!(name: 'a', age: 20)
+      user.update!(age: 21)
+      user.destroy!
       Department.create!(name: 'a')
 
       Tempfile.open(['tmp', '.xlsx']) do |file|
         Breathing::Excel.new.create(file_name: file.path)
         workbook = RubyXL::Parser.parse(file.path)
-        expect(workbook.sheets.map(&:name)).to eq(%w[departments users])
+        expect(workbook.sheets.map(&:name)).to eq(%w[departments users change_logs])
+        change_logs_sheet = workbook.worksheets.last
+
+        expect(change_logs_sheet.sheet_data.size).to eq(Breathing::ChangeLog.count + 1)
       end
     end
   end

@@ -27,6 +27,8 @@ module Breathing
         add_style(sheet)
       end
 
+      add_change_logs_sheet(id) if table_names.size.positive?
+
       @workbook.write(file_name)
     end
 
@@ -67,6 +69,24 @@ module Breathing
       end
 
       sheet.change_row_horizontal_alignment(0, 'center')
+    end
+
+    def add_change_logs_sheet(id)
+      sheet = @workbook.add_worksheet(Breathing::ChangeLog.table_name)
+
+      change_logs = Breathing::ChangeLog.where('id >= ?', id).order(:id)
+      change_logs.first.attributes_for_excel.keys.each.with_index do |header_column, column_index|
+        cell = sheet.add_cell(0, column_index, header_column)
+        cell.change_fill('ddedf3') # blue
+      end
+
+      change_logs.each.with_index(1) do |change_log, row_number|
+        change_log.attributes_for_excel.each.with_index do |(_column_name, value), column_index|
+          sheet.add_cell(row_number, column_index, value)
+        end
+      end
+
+      add_style(sheet)
     end
   end
 end
