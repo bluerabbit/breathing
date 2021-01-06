@@ -41,6 +41,9 @@ module Breathing
       row.data_attributes.keys.each.with_index do |header_column, column_index|
         cell = sheet.add_cell(0, column_index, header_column)
         cell.change_fill(header_color)
+        if column_index == 0
+          add_hyperlink(sheet: sheet, cell: cell, to_sheet: 'change_logs', to_cell: 'A1')
+        end
       end
     end
 
@@ -83,12 +86,23 @@ module Breathing
       end
 
       change_logs.each.with_index(1) do |change_log, row_number|
-        change_log.attributes_for_excel.each.with_index do |(_column_name, value), column_index|
-          sheet.add_cell(row_number, column_index, value)
+        change_log.attributes_for_excel.each.with_index do |(column_name, value), column_index|
+          cell = sheet.add_cell(row_number, column_index, value)
+
+          if column_name == 'table_name'
+            add_hyperlink(sheet: sheet, cell: cell, to_sheet: value, to_cell: 'A1')
+          end
         end
       end
 
       add_style(sheet)
+    end
+
+    def add_hyperlink(sheet:, cell:, to_sheet:, to_cell:)
+      sheet.hyperlinks ||= RubyXL::Hyperlinks.new
+      sheet.hyperlinks << RubyXL::Hyperlink.new(ref: RubyXL::Reference.ind2ref(cell.row, cell.column), location: "#{to_sheet}!#{to_cell}")
+      cell.change_font_underline(true)
+      cell.change_font_color('1F1FFF') # blue
     end
   end
 end
