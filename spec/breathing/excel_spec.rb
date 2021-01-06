@@ -16,8 +16,8 @@ describe Breathing::Excel do
       Tempfile.open(['tmp', '.xlsx']) do |file|
         Breathing::Excel.new.create(file_name: file.path)
         workbook = RubyXL::Parser.parse(file.path)
-        expect(workbook.sheets[0].name).to eq('users')
-        user_sheet = workbook.worksheets[0]
+        expect(workbook.sheets.map(&:name)).to eq(%w[change_logs users])
+        user_sheet = workbook.worksheets.last
         expect(user_sheet.sheet_data.size).to eq(Breathing::ChangeLog.where(table_name: :users).count + 1)
       end
     end
@@ -31,8 +31,8 @@ describe Breathing::Excel do
       Tempfile.open(['tmp', '.xlsx']) do |file|
         Breathing::Excel.new.create(file_name: file.path)
         workbook = RubyXL::Parser.parse(file.path)
-        expect(workbook.sheets.map(&:name)).to eq(%w[departments users change_logs])
-        change_logs_sheet = workbook.worksheets.last
+        expect(workbook.sheets.map(&:name)).to eq(%w[change_logs departments users])
+        change_logs_sheet = workbook.worksheets.first
 
         expect(change_logs_sheet.sheet_data.size).to eq(Breathing::ChangeLog.count + 1)
       end

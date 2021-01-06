@@ -27,8 +27,10 @@ module Breathing
         add_style(sheet)
       end
 
-      add_change_logs_sheet(id) if table_names.size.positive?
-
+      if table_names.size.positive?
+        add_change_logs_sheet(id)
+        @workbook.worksheets.rotate!(-1)
+      end
       @workbook.write(file_name)
     end
 
