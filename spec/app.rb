@@ -7,6 +7,7 @@ ActiveRecord::Base.establish_connection(
 
 ActiveRecord::Schema.define version: 0 do
   create_table :users, force: true do |t|
+    t.references :department, foreign_key: false
     t.string :name, null: false
     t.integer :age, null: false
     t.timestamps null: false
@@ -16,6 +17,8 @@ ActiveRecord::Schema.define version: 0 do
     t.string :name, null: false
     t.timestamps null: false
   end
+
+  add_foreign_key :users, :departments
 end
 
 class User < ActiveRecord::Base

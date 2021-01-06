@@ -38,11 +38,16 @@ module Breathing
 
     def add_header_row(sheet, row)
       header_color = 'ddedf3' # blue
+      foreign_keys = ActiveRecord::Base.connection.foreign_keys(sheet.sheet_name)
       row.data_attributes.keys.each.with_index do |header_column, column_index|
         cell = sheet.add_cell(0, column_index, header_column)
         cell.change_fill(header_color)
         if column_index == 0
           add_hyperlink(sheet: sheet, cell: cell, to_sheet: 'change_logs', to_cell: 'A1')
+        end
+
+        if key = foreign_keys.detect { |k| k.options[:column] == header_column }
+          add_hyperlink(sheet: sheet, cell: cell, to_sheet: key.to_table, to_cell: 'A1')
         end
       end
     end

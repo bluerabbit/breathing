@@ -23,10 +23,11 @@ describe Breathing::Excel do
     end
 
     it 'multi sheets' do
-      user = User.create!(name: 'a', age: 20)
+      department = Department.create!(name: 'a')
+
+      user = User.create!(name: 'a', age: 20, department_id: department.id)
       user.update!(age: 21)
       user.destroy!
-      Department.create!(name: 'a')
 
       Tempfile.open(['tmp', '.xlsx']) do |file|
         Breathing::Excel.new.create(file_name: file.path)
