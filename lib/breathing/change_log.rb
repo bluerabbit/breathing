@@ -29,9 +29,9 @@ module Breathing
     def diff
       return nil if action != 'UPDATE'
 
-      changed_attribute_columns.each.with_object({}) do |column_name, diff_hash|
-        diff_hash[column_name] = {before_data[column_name] => after_data[column_name]}
-      end
+      changed_attribute_columns.map do |column_name|
+        "#{column_name}: #{before_data[column_name]} -> #{after_data[column_name]}"
+      end.join(" \n")
     end
 
     def attributes_for_excel
@@ -41,9 +41,7 @@ module Breathing
         'table_name'     => table_name,
         'action'         => action,
         'id'             => transaction_id,
-        'diff'           => diff.to_s,
-        'before_data'    => before_data.to_s,
-        'after_data'     => after_data.to_s,
+        'diff'           => diff
       }
     end
   end
