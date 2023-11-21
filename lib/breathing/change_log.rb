@@ -19,7 +19,7 @@ module Breathing
 
     def data_attributes
       data_column_names.each.with_object('change_logs.id'         => id,
-                                         'change_logs.created_at' => created_at.to_s(:db),
+                                         'change_logs.created_at' => created_at.to_fs(:db),
                                          'action'                 => action,
                                          'id'                     => transaction_id) do |name, hash|
         hash[name] = data[name]
@@ -37,7 +37,7 @@ module Breathing
     def attributes_for_excel
       {
         'change_logs.id' => id,
-        'created_at'     => created_at.to_s(:db),
+        'created_at'     => created_at.to_fs(:db),
         'table_name'     => table_name,
         'action'         => action,
         'id'             => transaction_id,

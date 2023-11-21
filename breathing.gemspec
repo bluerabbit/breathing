@@ -2,7 +2,7 @@ $:.push File.expand_path('lib', __dir__)
 
 Gem::Specification.new do |s|
   s.name        = 'breathing'
-  s.version     = '0.0.10'
+  s.version     = '0.0.11'
   s.platform    = Gem::Platform::RUBY
   s.authors     = ['Akira Kusumoto']
   s.email       = ['akirakusumo10@gmail.com']
@@ -19,13 +19,15 @@ Gem::Specification.new do |s|
   s.bindir      = 'exe'
   s.executables = s.files.grep(%r{^exe/}) { |f| File.basename(f) }
   s.add_runtime_dependency 'thor'
+  s.required_ruby_version = '>= 3.0'
 
-  s.add_dependency 'activerecord', ['>= 6.0.0']
+  s.add_dependency 'activerecord', ['>= 7.0.0']
   s.add_dependency 'hairtrigger'
   s.add_dependency 'mysql2'
   s.add_dependency 'pg'
   s.add_dependency 'terminal-table'
   s.add_dependency 'rubyXL', ['>= 3.4.0']
+  s.add_development_dependency 'rake'
   s.add_development_dependency 'pry-byebug'
   s.add_development_dependency 'rspec', '~> 3.9'
 end
