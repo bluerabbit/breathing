@@ -16,7 +16,7 @@ describe Breathing::TerminalTable do
       table = Breathing::TerminalTable.new(:users)
       puts table.render(id: 1)
 
-      expect(table.rows.size).to eq(3)
+      expect(table.rows.size - 2).to eq(3) # Three rows excluding header rows
     end
   end
 end

@@ -4,13 +4,12 @@ executors:
   default:
     working_directory: ~/app
     docker:
-      - image: circleci/ruby:2.6
+      - image: cimg/ruby:3.2.2
         environment:
           DB_USER: root
           DB_HOST: '127.0.0.1'
       - image: circleci/mysql:8-ram
         environment:
-          MYSQL_USER: root
           MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: breathing_test
         command: [--default-authentication-plugin=mysql_native_password]
